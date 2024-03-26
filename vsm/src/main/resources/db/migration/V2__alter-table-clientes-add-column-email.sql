@@ -1,0 +1,1 @@
+alter table clientes add column email varchar(100);
