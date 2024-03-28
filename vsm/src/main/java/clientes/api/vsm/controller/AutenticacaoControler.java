@@ -1,6 +1,8 @@
 package clientes.api.vsm.controller;
 
 import clientes.api.vsm.domain.usuario.DadosAutenticacao;
+import clientes.api.vsm.domain.usuario.Usuario;
+import clientes.api.vsm.infra.security.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +20,14 @@ public class AutenticacaoControler {
     @Autowired
     private AuthenticationManager manager;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping
     public ResponseEntity efetuarLogin(@RequestBody @Valid DadosAutenticacao dados){
         var token = new UsernamePasswordAuthenticationToken(dados.login(),dados.senha());
        var authentication = manager.authenticate(token);
-       return ResponseEntity.ok().build();
+       return ResponseEntity.ok(tokenService.gerarToken((Usuario) authentication.getPrincipal()));
     }
 
 
